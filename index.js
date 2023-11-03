@@ -64,7 +64,13 @@ app.get('/check-ip/:ip', (req, res) => {
 
 app.get('/', (req, res) => {
   const {realIp} = req;
-  const {country, range} = findCountry(realIp);
+  console.log(realIp, "realIp")
+  const ip =
+      req.headers['cf-connecting-ip'] ||
+      req.headers['x-real-ip'] ||
+      req.headers['x-forwarded-for'] ||
+      req.socket.remoteAddress || '';
+  const {country, range} = findCountry(ip);
   res.json({ip: realIp, range, country});
 });
 app.listen(3000, () => console.log('Server running on port 3000'));
